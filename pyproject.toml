@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "env-bootstrap"
+version = "1.0.0"
+description = "AI-first environment bootstrapping for fresh WSL/Ubuntu installations"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "leonbreukelman" }
+]
+dependencies = []
+
+[project.scripts]
+env-bootstrap = "env_bootstrap.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/env_bootstrap"]
