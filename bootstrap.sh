@@ -17,15 +17,15 @@ else
     exit 1
 fi
 
-echo "[1/6] Installing base packages..."
+echo "[1/9] Installing base packages..."
 if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
     sudo apt-get update -qq
-    sudo apt-get install -y -qq git curl wget build-essential age
+    sudo apt-get install -y -qq git curl wget build-essential age unzip
 else
     echo "WARNING: Unsupported OS ($OS). You may need to install packages manually."
 fi
 
-echo "[2/6] Installing GitHub CLI..."
+echo "[2/9] Installing GitHub CLI..."
 if ! command -v gh &> /dev/null; then
     if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
         (type -p wget >/dev/null || sudo apt-get install wget -y) && \
@@ -38,7 +38,7 @@ else
     echo "      GitHub CLI already installed"
 fi
 
-echo "[3/6] Installing uv (Python package manager)..."
+echo "[3/9] Installing uv (Python package manager)..."
 if ! command -v uv &> /dev/null && [ ! -f "$HOME/.local/bin/uv" ]; then
     curl -LsSf https://astral.sh/uv/install.sh | sh
 else
@@ -48,7 +48,7 @@ fi
 # Ensure PATH includes local bin
 export PATH="$HOME/.local/bin:$PATH"
 
-echo "[4/6] Installing Node.js (if missing)..."
+echo "[4/9] Installing Node.js (if missing)..."
 if ! command -v node &> /dev/null; then
     curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
     sudo apt-get install -y nodejs
@@ -56,14 +56,40 @@ else
     echo "      Node.js already installed: $(node --version)"
 fi
 
-echo "[5/6] Installing Claude Code..."
+echo "[5/9] Installing Claude Code..."
 if ! command -v claude &> /dev/null; then
     npm install -g @anthropic-ai/claude-code
 else
     echo "      Claude Code already installed"
 fi
 
-echo "[6/6] GitHub Authentication..."
+echo "[6/9] Installing AWS CLI v2..."
+if ! command -v aws &> /dev/null; then
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+    unzip -q /tmp/awscliv2.zip -d /tmp
+    sudo /tmp/aws/install
+    rm -rf /tmp/awscliv2.zip /tmp/aws
+else
+    echo "      AWS CLI already installed: $(aws --version | cut -d' ' -f1)"
+fi
+
+echo "[7/9] Installing kubectl..."
+if ! command -v kubectl &> /dev/null; then
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+else
+    echo "      kubectl already installed: $(kubectl version --client --short 2>/dev/null || kubectl version --client | head -1)"
+fi
+
+echo "[8/9] Installing AWS CDK..."
+if ! npm list -g aws-cdk &> /dev/null; then
+    npm install -g aws-cdk
+else
+    echo "      AWS CDK already installed"
+fi
+
+echo "[9/9] GitHub Authentication..."
 if ! gh auth status &> /dev/null; then
     echo ""
     echo "You need to authenticate with GitHub."

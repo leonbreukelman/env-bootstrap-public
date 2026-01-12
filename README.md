@@ -33,12 +33,15 @@ bash bootstrap.sh
 ### Phase 1 (Public Bootstrap)
 
 Installs:
-- git, curl, wget, build-essential
+- git, curl, wget, build-essential, unzip
 - age (encryption)
 - GitHub CLI (gh)
 - uv (Python package manager)
 - Node.js
 - Claude Code
+- AWS CLI v2
+- kubectl (Kubernetes CLI)
+- AWS CDK
 
 Then guides you to:
 1. Authenticate with GitHub (`gh auth login`)
@@ -50,6 +53,7 @@ Then guides you to:
 After Phase 1, you run your private bootstrap which:
 - Decrypts and restores API keys to `~/.secrets`
 - Decrypts and restores SSH private keys
+- Restores AWS SSO configuration (`~/.aws/config`)
 - Restores dotfiles (.gitconfig, .bashrc)
 
 ## Architecture
@@ -68,6 +72,7 @@ After Phase 1, you run your private bootstrap which:
 │           PRIVATE REPO                          │
 │  - Encrypted secrets (age)                      │
 │  - SSH keys (encrypted)                         │
+│  - AWS SSO configuration                        │
 │  - Personal dotfiles                            │
 └─────────────────────────────────────────────────┘
 ```
