@@ -66,7 +66,7 @@ After Phase 1, you run your private bootstrap which:
 └─────────────────────┬───────────────────────────┘
                       │
                       │ gh auth login
-                      │ + age key from LastPass
+                      │ + age key from password manager
                       ▼
 ┌─────────────────────────────────────────────────┐
 │           PRIVATE REPO                          │
@@ -85,7 +85,7 @@ On a fresh machine:
 2. **No Python?** Use `curl | bash` method
 3. **No internet?** Copy bootstrap.sh to USB drive
 
-Key requirement: You need your **age key** from LastPass to decrypt secrets.
+Key requirement: You need your **age key** from your password manager to decrypt secrets.
 
 ## Customization
 
